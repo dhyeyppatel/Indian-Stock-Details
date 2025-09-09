@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Stock Market Dashboard</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+        }
+
+        /* Custom scrollbar for a better look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; /* Slate 800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; /* Slate 600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* Slate 500 */
+        }
+
+        /* Simple loading spinner animation */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-left-color: #38bdf8; /* Sky 400 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* A subtle glow effect for the card */
+        .card-glow {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1), 0 0 30px rgba(56, 189, 248, 0.05);
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">
+                Indian Stock Market Dashboard
+            </h1>
+            <p class="text-slate-400">Get real-time data for stocks listed on the NSE & BSE</p>
+        </header>
+
+        <!-- Search Form -->
+        <form id="stock-search-form" class="mb-8">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="stock-query"
+                    placeholder="Enter stock symbol (e.g., RELIANCE, INFY)"
+                    class="w-full p-4 pr-12 text-lg bg-slate-800 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-300"
+                    required
+                >
+                <button 
+                    type="submit" 
+                    class="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-sky-400 transition-colors"
+                    aria-label="Search"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- Results Display Area -->
+        <main id="results-container">
+            <!-- Initial state message -->
+            <div id="initial-message" class="text-center text-slate-500 py-10">
+                <p>Search for a stock to see its details here.</p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="hidden justify-center py-10">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="hidden text-center bg-red-900/50 border border-red-700 p-4 rounded-lg">
+                <p id="error-text" class="text-red-300"></p>
+            </div>
+
+            <!-- Stock Details Card -->
+            <div id="stock-details-card" class="hidden bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 md:p-8 card-glow">
+                <!-- Card Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-700 pb-4">
+                    <div>
+                        <h2 id="stock-name" class="text-2xl md:text-3xl font-bold text-white"></h2>
+                        <p class="text-slate-400">
+                            <span class="font-semibold">🔣 Symbol:</span> <span id="stock-symbol" class="font-mono text-sky-400"></span> 
+                            | 
+                            <span class="font-semibold">🆔 ISIN:</span> <span id="stock-isin"></span>
+                        </p>
+                    </div>
+                    <div class="mt-3 sm:mt-0 text-right">
+                        <p class="text-sm text-slate-400">🏷️ Recent Price</p>
+                        <p class="text-3xl font-bold text-white" id="stock-price"></p>
+                        <!-- Price change can be added here if available from API -->
+                    </div>
+                </div>
+
+                <!-- Stock Data Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5">
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">💹 Market Cap</p>
+                        <p id="stock-market-cap" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">💹 Stock PE</p>
+                        <p id="stock-pe" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">🧮 Book Value</p>
+                        <p id="stock-book-value" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">➗ Dividend Yield</p>
+                        <p id="stock-dividend-yield" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">🥌 ROCE</p>
+                        <p id="stock-roce" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">🗞️ ROE</p>
+                        <p id="stock-roe" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">📈 High / Low</p>
+                        <p id="stock-high-low" class="text-lg font-semibold text-white"></p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-sm text-slate-400">🎭 Face Value</p>
+                        <p id="stock-face-value" class="text-lg font-semibold text-white"></p>
+                    </div>
+                     <div class="info-item">
+                        <p class="text-sm text-slate-400">🗓️ Listing Date</p>
+                        <p id="stock-listing-date" class="text-lg font-semibold text-white"></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-10 text-slate-500 text-sm">
+            <p>
+                Built for GitHub Pages. 
+                <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400">View on GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const form = document.getElementById('stock-search-form');
+        const queryInput = document.getElementById('stock-query');
+        
+        const initialMessage = document.getElementById('initial-message');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const stockDetailsCard = document.getElementById('stock-details-card');
+
+        const API_BASE_URL = 'https://api.freeapi.app/api/v1/public/stocks?query=';
+
+        form.addEventListener('submit', handleSearch);
+
+        function handleSearch(event) {
+            event.preventDefault();
+            const query = queryInput.value.trim().toUpperCase();
+            if (query) {
+                fetchStockData(query);
+            }
+        }
+
+        async function fetchStockData(query) {
+            // Reset UI state
+            hideAllSections();
+            loadingSpinner.style.display = 'flex';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}${query}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                // Correctly access the nested stock data array
+                const stockList = data.data?.data;
+
+                if (data.success && stockList && stockList.length > 0) {
+                    // Assuming the first result is the most relevant one
+                    displayStockData(stockList[0]);
+                } else {
+                    showError(data.message || 'Stock not found. Please check the symbol and try again.');
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showError('Could not fetch data. Please check your connection or try again later.');
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function displayStockData(stock) {
+            hideAllSections();
+            
+            // Populate the card with data from the API
+            document.getElementById('stock-name').textContent = stock.Name ? `⚜️ ${stock.Name}` : 'N/A';
+            document.getElementById('stock-symbol').textContent = stock.Symbol || 'N/A';
+            document.getElementById('stock-isin').textContent = stock.ISIN || 'N/A';
+            document.getElementById('stock-price').textContent = stock.CurrentPrice ? `${stock.CurrentPrice.toLocaleString('en-IN')}` : 'N/A';
+            
+            document.getElementById('stock-market-cap').textContent = stock.MarketCap ? `${stock.MarketCap.toLocaleString('en-IN')} Cr` : 'N/A';
+            document.getElementById('stock-pe').textContent = stock.StockPE || 'N/A';
+            document.getElementById('stock-book-value').textContent = stock.BookValue ? `${stock.BookValue.toLocaleString('en-IN')}` : 'N/A';
+            document.getElementById('stock-dividend-yield').textContent = stock.DividendYield ? `${stock.DividendYield}%` : 'N/A';
+            document.getElementById('stock-roce').textContent = stock.ROCE ? `${stock.ROCE}%` : 'N/A';
+            document.getElementById('stock-roe').textContent = stock.ROE ? `${stock.ROE}%` : 'N/A';
+            document.getElementById('stock-high-low').textContent = stock.HighLow || 'N/A';
+            document.getElementById('stock-face-value').textContent = stock.FaceValue ? `${stock.FaceValue.toLocaleString('en-IN')}` : 'N/A';
+            document.getElementById('stock-listing-date').textContent = stock.ListingDate ? new Date(stock.ListingDate).toLocaleDateString('en-IN') : 'N/A';
+            
+            stockDetailsCard.style.display = 'block';
+        }
+
+        function showError(message) {
+            hideAllSections();
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideAllSections() {
+            initialMessage.style.display = 'none';
+            loadingSpinner.style.display = 'none';
+            errorMessage.style.display = 'none';
+            stockDetailsCard.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
+
