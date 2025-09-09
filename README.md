@@ -1,84 +1,85 @@
-# sharebazaarobot - chat bot
-It is repository for chat bot: [@sharebazaarobot](https://t.me/sharebazaarobot)
+# ShareBazaarobot - Indian Stock Market Bot for Telegram
 
-## What it is?
-This repository can be imported to [Bots.Business](https://bots.business) as a worked chat bot.
+[](https://t.me/sharebazaarobot)
+[](https://www.google.com/search?q=https://github.com/dhyeyppatel/sharebazaarobot/blob/main/LICENSE)
 
-[Bots.Business](https://bots.business) - it is probably the first CBPaaS - Chat Bot Platform as a Service.
+A simple and efficient Telegram bot that provides real-time financial data for stocks listed on the Indian stock market.
 
-A CBPaaS is a cloud-based platform that enables developers to create chatbots without needing to build backend infrastructure.
+**Try the bot live on Telegram: [@sharebazaarobot](https://t.me/sharebazaarobot)**
 
-## Create your own bot for Telegram from this Git repo
+## 📜 About The Project
 
-How to create bot?
-1. Create bot with [@BotFather](https://telegram.me/BotFather) and take Secret Token
-2. Create bot in App and add Secret Token
-3. Add Public Key from App as [Deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) with read access (and write access for bot exporting if you need it)
-4. Do import for this git repo
+ShareBazaarobot was created to provide investors and traders with quick and easy access to essential stock market data directly within their Telegram messenger. Instead of navigating complex websites or apps, you can simply send a stock symbol to the bot and receive a comprehensive summary instantly.
 
-Now you can talk with yours new Telegram Bot
+This bot is perfect for:
 
-See [more](https://help.bots.business/getting-started)
+  * Retail investors wanting a quick health check of a stock.
+  * Traders needing approximate price and metric updates.
+  * Anyone interested in the Indian stock market.
 
-## Commands - in commands folder
-File name - it is command name (Bot it can be rewritten in command description)
+*(Recommendation: Add a GIF or screenshot of your bot in action here.)*
 
-Command can have: `name`, `help`, `aliases` (second names), `answer`, `keyboard`, `scnarios` (for simple logic) and other options.
+### ✨ Features
 
-### Command description
-It is file header:
+  * **Real-Time Data:** Fetches the latest available information from the stock exchange.
+  * **Comprehensive Details:** Provides a wide range of financial metrics in a single message.
+  * **Easy to Use:** A simple, command-less interface. Just send the stock symbol\!
+  * **24/7 Availability:** The bot is always active and ready to respond.
 
-    /*CMD
-      command: /test
-      help: this is help for ccommand
-      need_reply: [ true or false here ]
-      auto_retry_time: [ time in sec ]
-      answer: it is example answer for /test command
-      keyboard: button1, button2
-      aliases: /test2, /test3
-    CMD*/
+### 🤖 Data Provided
 
-See [more](https://help.bots.business/commands)
+When you query a stock, the bot returns the following information formatted for clarity:
 
-### Command body
-It is command code in JavaScript.
-Use Bot Java Script for logic in command.
+  * **💲 Stock Info 💲**
+  * **⚜️ Name:** Full company name
+  * **🔣 Symbol:** The stock ticker symbol (e.g., `RELIANCE`)
+  * **🗓️ Listing Date:** The date the company was listed on the exchange
+  * **🆔 ISIN:** International Securities Identification Number
+  * **💹 Market Cap:** The company's total market capitalization
+  * **🏷️ Recent Price:** The current or last traded price
+  * **📈 High / Low:** The 52-week high and low price range
+  * **💹 Stock PE:** The Price-to-Earnings ratio
+  * **🧮 Book Value:** The book value per share
+  * **➗ Dividend Yield:** The dividend yield percentage
+  * **🥌 ROCE:** Return on Capital Employed
+  * **🗞️ ROE:** Return on Equity
+  * **🎭 Face Value:** The face value of the stock
 
-For example:
-> Bot.sendMessage(2+2);
+### 🛠️ Built With
 
-See [more](https://help.bots.business/scenarios-and-bjs)
+It is Bot JavaScript. It's an ordinary Java with some inserts.
+Command can have some scenarios with BJS code. Example. Calculating 2+2 and send result to the chat - it is BJS code.
+In BJS, you can use all the usual JS functions except setTimeout, setInterval
 
+## 💬 Usage
 
-## Libraries - in libs folder
-You can store common code in the libs folder. File name - it is library name.
+Interacting with the bot is incredibly simple:
 
-For example code in myLib.js:
+1.  **Start a conversation:** Open a chat with your bot on Telegram.
+2.  **Send the `/start` command:**
+    ```
+    /start
+    ```
+    The bot will greet you with a welcome message.
+3.  **Get stock data:**
+    Simply send the symbol of any Indian stock (e.g., `INFY`, `RELIANCE`, `TATAMOTORS`). The bot will listen for any message and treat it as a potential stock symbol to query.
 
-    function hello(){ Bot.sendMessage("Hello from lib!") }
-    function goodbye(name){ Bot.sendMessage("Goodbye, " + name) }
+## 🤝 Contributing
 
-    publish({
-      sayHello: hello,
-      sayGoodbyeTo: goodbye
-    })
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-then you can run in any bot's command:
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-    Libs.myLib.hello()
-    Libs.myLib.sayGoodbyeTo("Alice")
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
-See [more](https://help.bots.business/git/library)
+## 📄 License
 
-## Other bots example
-See other bots examples in the [github](https://github.com/bots-business?utf8=✓&tab=repositories&q=&type=public&language=javascript) or in the [Bot Store](https://bots.business/)
+Distributed under the MIT License. See `LICENSE` for more information.
 
+## 📬 Contact
 
-## Other help
-[Help.bots.business](https://help.bots.business)
-
-## API
-See [API](https://api.bots.business/docs#/docs/summary)
-
-
-![](https://bots.business/images/web-logo.png)
+Project Link: [https://github.com/dhyeyppatel/sharebazaarobot](https://www.google.com/search?q=https://github.com/dhyeyppatel/sharebazaarobot)
